@@ -1,6 +1,13 @@
-export function App() {
+import { BrowserRouter } from 'react-router-dom'
+import { CartContextProvider } from './contexts/CartContext'
+import { Router } from './Router'
 
-  return (    
-      <h1>Vite + React</h1>
+export function App() {
+  return (
+    <BrowserRouter>
+      <CartContextProvider>
+        <Router />
+      </CartContextProvider>
+    </BrowserRouter>
   )
 }
