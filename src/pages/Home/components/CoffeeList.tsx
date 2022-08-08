@@ -1,5 +1,5 @@
 import { CoffeeCard } from './CoffeeCard'
-import { storeCoffeeList } from './storeCoffeeList'
+import { storeCoffeeList } from '../../../@types/storeCoffeeList'
 
 export function CoffeeList() {
   return (
