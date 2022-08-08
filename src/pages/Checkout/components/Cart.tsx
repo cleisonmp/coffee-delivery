@@ -1,7 +1,14 @@
+import { useNavigate } from 'react-router-dom'
 import { cartList } from '../../../@types/storeCoffeeList'
 import { CoffeeCardSideways } from './CoffeeCardSideways'
 
 export function Cart() {
+  const navigateTo = useNavigate()
+
+  const handleCompleteOrder = () => {
+    navigateTo('/orderfinished')
+  }
+
   return (
     <div className="bg-base-card p-10 rounded-tr-[2.25rem] rounded-bl-[2.25rem]">
       {cartList.map((coffee) => {
@@ -21,7 +28,10 @@ export function Cart() {
           <span className="text-xl font-bold">R$ 5,00</span>
         </div>
       </div>
-      <button className="text-center w-full rounded text-white bg-yellow-500 mt-6 py-3 hover:bg-yellow-900 transition-colors">
+      <button
+        onClick={handleCompleteOrder}
+        className="text-center w-full rounded text-white bg-yellow-500 mt-6 py-3 hover:bg-yellow-900 transition-colors"
+      >
         CONFIRMAR PEDIDO
       </button>
     </div>
