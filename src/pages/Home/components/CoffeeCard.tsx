@@ -1,52 +1,61 @@
 import { ShoppingCart, Plus, Minus } from 'phosphor-react'
 import { useState } from 'react'
+import { Coffee } from '../../../@types/models'
 
-interface CardProps {
-  type: string
+interface CoffeeCardProps {
+  coffeeData: Coffee
 }
+export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
+  const { name, categories, description, type, inventoryAmount } = coffeeData
+  const price = new Intl.NumberFormat('pt-BR', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+  }).format(coffeeData.price)
 
-export function CoffeeCard({ type }: CardProps) {
   const [quantity, setQuantity] = useState(0)
 
   const handleAddQuantity = () => {
-    setQuantity((state) => {
-      return state + 1
-    })
+    if (quantity < inventoryAmount) {
+      setQuantity((state) => {
+        return state + 1
+      })
+    }
   }
   const handleRemoveQuantity = () => {
-    setQuantity((state) => {
-      return state - 1
-    })
+    if (quantity > 0) {
+      setQuantity((state) => {
+        return state - 1
+      })
+    }
   }
 
   return (
     <div className="bg-base-card rounded-tr-[2.25rem] rounded-bl-[2.25rem] flex flex-col items-center px-5">
-      <img src={'./images/' + type + '.png'} alt="ops" className="-mt-5" />
+      <img src={'./images/' + type + '.png'} alt="" className="-mt-5" />
       <div className="flex mt-3 px-3 gap-1">
-        <span className="bg-yellow-100 rounded-full px-2 h-5 text-yellow-900 text-xxs uppercase font-bold leading-tight flex items-center justify-center">
-          especial
-        </span>
-        <span className="bg-yellow-100 rounded-full px-2  text-yellow-900 text-xxs uppercase font-bold leading-tight flex items-center justify-center">
-          alcoólico
-        </span>
-        <span className="bg-yellow-100 rounded-full px-2  text-yellow-900 text-xxs uppercase font-bold leading-tight flex items-center justify-center">
-          gelado
-        </span>
+        {categories.map((category, index) => {
+          return (
+            <span
+              key={index}
+              className="bg-yellow-100 rounded-full px-2 h-5 text-yellow-900 text-xxs uppercase font-bold leading-tight flex items-center justify-center"
+            >
+              {category}
+            </span>
+          )
+        })}
       </div>
       <h1 className="mt-4 font-['Baloo_2'] font-bold text-xl text-base-subtitle">
-        Café
+        {name}
       </h1>
-      <span className="mt-2 text-sm text-base-label">
-        Café expresso com calda de chocolate, pouco leite e espuma
-      </span>
-      <div className="flex mt-8 mb-5 w-full items-center justify-between">
+      <span className="mt-2 text-sm text-base-label">{description}</span>
+      <div className="flex flex-col md:flex-row mt-8 mb-5 w-full items-center justify-between">
         <div>
-          <span className="text-sm leading-tight ">R$</span>
+          <span className="text-sm leading-tight ">R$ </span>
           <span className="mt-4 font-['Baloo_2'] font-bold text-2xl leading-tight">
-            29,99
+            {price}
           </span>
         </div>
-        <div className="flex gap-2 ">
+        <div className="flex gap-2 mt-2 md:mt-0">
           <div className="flex px-2 gap-2 bg-base-button rounded items-center">
             <button
               onClick={handleRemoveQuantity}
