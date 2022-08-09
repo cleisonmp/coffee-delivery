@@ -1,11 +1,19 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { cartList } from '../../../@types/storeCoffeeList'
 import { CartContext } from '../../../contexts/CartContext'
+import { updateCartSumAction } from '../../../reducers/Cart/actions'
+import { cartReducer } from '../../../reducers/Cart/reducer'
 import { CoffeeCardSideways } from './CoffeeCardSideways'
 
 export function Cart() {
   const { coffeeList, clearCart } = useContext(CartContext)
+  const [cartState, dispatch] = useReducer(cartReducer, {
+    itemsPriceSum: 0,
+    deliveryPrice: 0,
+    totalOrderPrice: 0,
+  })
+  const { itemsPriceSum, deliveryPrice, totalOrderPrice } = cartState
+
   const navigateTo = useNavigate()
 
   useEffect(() => {
@@ -14,9 +22,20 @@ export function Cart() {
     }
   }, [coffeeList?.length, navigateTo])
 
+  useEffect(() => {
+    dispatch(updateCartSumAction(coffeeList))
+  }, [coffeeList])
+
   const handleCompleteOrder = () => {
     clearCart()
     navigateTo('/orderfinished')
+  }
+  const formatPriceValue = (priceToFormat: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      minimumFractionDigits: 2,
+      currency: 'BRL',
+    }).format(priceToFormat)
   }
 
   return (
@@ -27,15 +46,17 @@ export function Cart() {
       <div className="flex flex-col gap-3">
         <div className="flex justify-between">
           <span className="text-sm">Total de itens</span>
-          <span>R$ 29,80</span>
+          <span>{formatPriceValue(itemsPriceSum)}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-sm">Entrega</span>
-          <span>R$ 5,00</span>
+          <span>{formatPriceValue(deliveryPrice)}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-xl font-bold">Total</span>
-          <span className="text-xl font-bold">R$ 5,00</span>
+          <span className="text-xl font-bold">
+            {formatPriceValue(totalOrderPrice)}
+          </span>
         </div>
       </div>
       <button
