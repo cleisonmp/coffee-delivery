@@ -1,8 +1,12 @@
 import { MapPin, ShoppingCart } from 'phosphor-react'
+import { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Logo } from '../assets/Logo'
+import { CartContext } from '../contexts/CartContext'
 
 export function Header() {
+  const { coffeeList } = useContext(CartContext)
+
   return (
     <header className="py-8">
       <nav className="flex items-center justify-between">
@@ -26,9 +30,11 @@ export function Header() {
             }
           >
             <ShoppingCart size={22} weight="fill" />
-            <span className="absolute mt-[-2.5rem] mr-[-2.5rem] bg-yellow-900 rounded-full text-white text-xs w-5 h-5 flex items-center justify-center">
-              3
-            </span>
+            {coffeeList.length > 0 && (
+              <span className="absolute mt-[-2.5rem] mr-[-2.5rem] bg-yellow-900 rounded-full text-white text-xs w-5 h-5 flex items-center justify-center">
+                {coffeeList.length}
+              </span>
+            )}
           </NavLink>
         </div>
       </nav>

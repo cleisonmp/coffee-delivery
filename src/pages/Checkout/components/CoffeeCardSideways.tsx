@@ -1,33 +1,40 @@
 import { Plus, Minus, Trash } from 'phosphor-react'
-import { useState } from 'react'
-import { Coffee } from '../../../@types/models'
+import { useContext } from 'react'
+import { CoffeeCartData } from '../../../@types/models'
+import { CartContext } from '../../../contexts/CartContext'
 
 interface CoffeeCardProps {
-  coffeeData: Coffee
+  coffeeData: CoffeeCartData
 }
 export function CoffeeCardSideways({ coffeeData }: CoffeeCardProps) {
-  const { name, type, inventoryAmount } = coffeeData
+  const { addCoffeeToShopCart, decreaseCoffeeQtyInCart, removeCoffeeFromCart } =
+    useContext(CartContext)
+
+  const { id, name, type, inventoryAmount, quantity } = coffeeData
   const price = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     minimumFractionDigits: 2,
     currency: 'BRL',
   }).format(coffeeData.price)
 
-  const [quantity, setQuantity] = useState(0)
-
   const handleAddQuantity = () => {
     if (quantity < inventoryAmount) {
-      setQuantity((state) => {
+      addCoffeeToShopCart(id)
+      /* setQuantity((state) => {
         return state + 1
-      })
+      }) */
     }
   }
   const handleRemoveQuantity = () => {
     if (quantity > 0) {
-      setQuantity((state) => {
-        return state - 1
-      })
+      decreaseCoffeeQtyInCart(id)
     }
+    if (quantity <= 1) {
+      removeCoffeeFromCart(id)
+    }
+  }
+  const handleRemoveFromCart = () => {
+    removeCoffeeFromCart(id)
   }
 
   return (
@@ -53,7 +60,10 @@ export function CoffeeCardSideways({ coffeeData }: CoffeeCardProps) {
                 <Plus size={14} weight="bold" />
               </button>
             </div>
-            <button className="bg-base-button rounded h-8 flex gap-1 items-center justify-center px-2 hover:bg-base-hover transition-colors leading-relaxed text-xs">
+            <button
+              onClick={handleRemoveFromCart}
+              className="bg-base-button rounded h-8 flex gap-1 items-center justify-center px-2 hover:bg-base-hover transition-colors leading-relaxed text-xs"
+            >
               <Trash size={16} color="#8047F8" />
               REMOVER
             </button>

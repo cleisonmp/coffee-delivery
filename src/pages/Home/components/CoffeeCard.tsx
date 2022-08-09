@@ -1,12 +1,15 @@
 import { ShoppingCart, Plus, Minus } from 'phosphor-react'
-import { useState } from 'react'
-import { Coffee } from '../../../@types/models'
+import { useContext, useState } from 'react'
+import { CoffeeCartData } from '../../../@types/models'
+import { CartContext } from '../../../contexts/CartContext'
 
 interface CoffeeCardProps {
-  coffeeData: Coffee
+  coffeeData: CoffeeCartData
 }
 export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
-  const { name, categories, description, type, inventoryAmount } = coffeeData
+  const { addCoffeeToShopCart } = useContext(CartContext)
+  const { id, name, categories, description, type, inventoryAmount } =
+    coffeeData
   const price = new Intl.NumberFormat('pt-BR', {
     style: 'decimal',
     minimumFractionDigits: 2,
@@ -16,6 +19,7 @@ export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
 
   const handleAddQuantity = () => {
     if (quantity < inventoryAmount) {
+      addCoffeeToShopCart(id)
       setQuantity((state) => {
         return state + 1
       })

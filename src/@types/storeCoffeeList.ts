@@ -132,23 +132,3 @@ export const storeCoffeeList: Coffee[] = [
     inventoryAmount: 99,
   },
 ]
-export const cartList: Coffee[] = [
-  {
-    id: 1,
-    name: 'Expresso Tradicional',
-    type: 'expresso',
-    categories: ['Tradicional'],
-    description: 'O tradicional café feito com água quente e grãos moídos',
-    price: 9.9,
-    inventoryAmount: 99,
-  },
-  {
-    id: 2,
-    name: 'Expresso Americano',
-    type: 'expresso_americano',
-    categories: ['Tradicional'],
-    description: 'Expresso diluído, menos intenso que o tradicional',
-    price: 8.9,
-    inventoryAmount: 99,
-  },
-]

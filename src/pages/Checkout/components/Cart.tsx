@@ -1,9 +1,18 @@
+import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { cartList } from '../../../@types/storeCoffeeList'
+// import { cartList } from '../../../@types/storeCoffeeList'
+import { CartContext } from '../../../contexts/CartContext'
 import { CoffeeCardSideways } from './CoffeeCardSideways'
 
 export function Cart() {
+  const { coffeeList } = useContext(CartContext)
   const navigateTo = useNavigate()
+
+  useEffect(() => {
+    if (coffeeList.length <= 0) {
+      navigateTo('/')
+    }
+  }, [coffeeList?.length, navigateTo])
 
   const handleCompleteOrder = () => {
     navigateTo('/orderfinished')
@@ -11,7 +20,7 @@ export function Cart() {
 
   return (
     <div className="bg-base-card p-10 rounded-tr-[2.25rem] rounded-bl-[2.25rem]">
-      {cartList.map((coffee) => {
+      {coffeeList.map((coffee) => {
         return <CoffeeCardSideways key={coffee.id} coffeeData={coffee} />
       })}
       <div className="flex flex-col gap-3">

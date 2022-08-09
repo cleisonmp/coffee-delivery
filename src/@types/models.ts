@@ -7,3 +7,6 @@ export interface Coffee {
   price: number
   inventoryAmount: number
 }
+export interface CoffeeCartData extends Coffee {
+  quantity: number
+}
