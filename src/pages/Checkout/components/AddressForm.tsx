@@ -1,6 +1,22 @@
+import axios from 'axios'
 import { MapPinLine } from 'phosphor-react'
-// https://brasilapi.com.br/api/cep/v1/{cep}
+import { FocusEvent } from 'react'
+
 export function AddressForm() {
+  const buscaCep = (e: FocusEvent<HTMLInputElement>) => {
+    const cepValue = e.target.value
+    console.log(cepValue)
+
+    axios
+      .get('https://brasilapi.com.br/api/cep/v1/' + String(cepValue))
+      .then(function (response) {
+        console.log(response.data)
+      })
+      .catch(function (error) {
+        console.error(error)
+      })
+      .then(function () {})
+  }
   const baseInputStyle =
     'bg-base-input p-3 placeholder:text-base-label border border-base-button rounded text-sm'
   return (
@@ -17,6 +33,7 @@ export function AddressForm() {
       <input
         type="text"
         placeholder="Cep"
+        onBlur={buscaCep}
         className={baseInputStyle + ' mt-8 '}
         maxLength={9}
         size={9}
