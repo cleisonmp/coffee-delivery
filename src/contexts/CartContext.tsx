@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 import { CoffeeCartData } from '../@types/models'
 import { storeCoffeeList } from '../@types/storeCoffeeList'
 
@@ -8,36 +8,41 @@ interface CartContextInfo {
   removeCoffeeFromCart: (coffeeId: number) => void
   increaseCoffeeQtyInCart: (coffeeId: number) => void
   decreaseCoffeeQtyInCart: (coffeeId: number) => void
+  clearCart: () => void
 }
 export const CartContext = createContext({} as CartContextInfo)
 
 interface CartContextProviderProps {
   children: ReactNode
 }
-const FAKECARTLIST: CoffeeCartData[] = [
-  {
-    id: 1,
-    name: 'Expresso Tradicional',
-    type: 'expresso',
-    categories: ['Tradicional'],
-    description: 'O tradicional café feito com água quente e grãos moídos',
-    price: 9.9,
-    quantity: 2,
-    inventoryAmount: 99,
-  },
-  {
-    id: 2,
-    name: 'Expresso Americano',
-    type: 'expresso_americano',
-    categories: ['Tradicional'],
-    description: 'Expresso diluído, menos intenso que o tradicional',
-    price: 8.9,
-    quantity: 4,
-    inventoryAmount: 99,
-  },
-]
+
+const loadCartFromStorage = () => {
+  const storedStateAsJSON = localStorage.getItem(
+    '@cmp-coffeeshop:cart-state-1.0.0',
+  )
+
+  if (storedStateAsJSON) {
+    return JSON.parse(storedStateAsJSON)
+  }
+  return []
+}
 export function CartContextProvider({ children }: CartContextProviderProps) {
-  const [coffeeList, setCoffeeList] = useState<CoffeeCartData[]>(FAKECARTLIST)
+  const [coffeeList, setCoffeeList] = useState<CoffeeCartData[]>(
+    loadCartFromStorage(),
+  )
+
+  useEffect(() => {
+    // const stateJSON =
+
+    localStorage.setItem(
+      '@cmp-coffeeshop:cart-state-1.0.0',
+      JSON.stringify(coffeeList),
+    )
+  }, [coffeeList])
+
+  const clearCart = () => {
+    setCoffeeList([])
+  }
 
   const addCoffeeToShopCart = (coffeeId: number, quantityToInsert: number) => {
     setCoffeeList((coffeeListState) => {
@@ -122,6 +127,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         removeCoffeeFromCart,
         increaseCoffeeQtyInCart,
         decreaseCoffeeQtyInCart,
+        clearCart,
       }}
     >
       {children}

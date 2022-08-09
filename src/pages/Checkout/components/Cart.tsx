@@ -5,7 +5,7 @@ import { CartContext } from '../../../contexts/CartContext'
 import { CoffeeCardSideways } from './CoffeeCardSideways'
 
 export function Cart() {
-  const { coffeeList } = useContext(CartContext)
+  const { coffeeList, clearCart } = useContext(CartContext)
   const navigateTo = useNavigate()
 
   useEffect(() => {
@@ -15,6 +15,7 @@ export function Cart() {
   }, [coffeeList?.length, navigateTo])
 
   const handleCompleteOrder = () => {
+    clearCart()
     navigateTo('/orderfinished')
   }
 
