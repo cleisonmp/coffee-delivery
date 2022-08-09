@@ -4,9 +4,10 @@ import { storeCoffeeList } from '../@types/storeCoffeeList'
 
 interface CartContextInfo {
   coffeeList: CoffeeCartData[]
-  addCoffeeToShopCart: (coffeeId: number) => void
-  decreaseCoffeeQtyInCart: (coffeeId: number) => void
+  addCoffeeToShopCart: (coffeeId: number, quantityToInsert: number) => void
   removeCoffeeFromCart: (coffeeId: number) => void
+  increaseCoffeeQtyInCart: (coffeeId: number) => void
+  decreaseCoffeeQtyInCart: (coffeeId: number) => void
 }
 export const CartContext = createContext({} as CartContextInfo)
 
@@ -38,47 +39,21 @@ const FAKECARTLIST: CoffeeCartData[] = [
 export function CartContextProvider({ children }: CartContextProviderProps) {
   const [coffeeList, setCoffeeList] = useState<CoffeeCartData[]>(FAKECARTLIST)
 
-  const addCoffeeToShopCart = (coffeeId: number) => {
-    // console.log('addCoffeeToShopCart -> ' + coffeeId)
-
+  const addCoffeeToShopCart = (coffeeId: number, quantityToInsert: number) => {
     setCoffeeList((coffeeListState) => {
-      const isCoffeeInCart = coffeeListState.find(
-        (coffee) => coffee.id === coffeeId,
-      )
-
-      if (isCoffeeInCart) {
-        const coffeeListWithNewItem = coffeeListState.map((coffee) => {
-          if (coffee.id === coffeeId) {
-            const updateCoffeeWithNewQuantity: CoffeeCartData = {
-              ...coffee,
-              quantity: coffee.quantity + 1,
-            }
-            // console.log('new coffee with quantity ')
-            // console.log(updateCoffeeWithNewQuantity)
-            return updateCoffeeWithNewQuantity
-          }
-
-          return coffee
-        })
-        return coffeeListWithNewItem
-      }
       const newItemIndex = storeCoffeeList.findIndex(
         (coffee) => coffee.id === coffeeId,
       )
       const newCoffeeToInsert: CoffeeCartData = {
         ...storeCoffeeList[newItemIndex],
-        quantity: 1,
+        quantity: quantityToInsert,
       }
-      // console.log('newCoffeeToInsert')
-      // console.log(newCoffeeToInsert)
 
       if (newCoffeeToInsert) {
         const updatedCoffeeListWithNewItem: CoffeeCartData[] = [
           ...coffeeListState,
           newCoffeeToInsert,
         ]
-        // console.log('updatedCoffeeListWithNewItem')
-        // console.log(updatedCoffeeListWithNewItem)
         return updatedCoffeeListWithNewItem
       }
       return coffeeListState
@@ -92,6 +67,30 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       return coffeeListWithoutRemovedItem
     })
   }
+  const increaseCoffeeQtyInCart = (coffeeId: number) => {
+    setCoffeeList((coffeeListState) => {
+      const isCoffeeInCart = coffeeListState.find(
+        (coffee) => coffee.id === coffeeId,
+      )
+
+      if (isCoffeeInCart) {
+        const updatedCoffeeList = coffeeListState.map((coffee) => {
+          if (coffee.id === coffeeId) {
+            const updatedCoffeeWithNewQuantity: CoffeeCartData = {
+              ...coffee,
+              quantity: coffee.quantity + 1,
+            }
+            return updatedCoffeeWithNewQuantity
+          }
+
+          return coffee
+        })
+        return updatedCoffeeList
+      }
+
+      return coffeeListState
+    })
+  }
   const decreaseCoffeeQtyInCart = (coffeeId: number) => {
     setCoffeeList((coffeeListState) => {
       const isCoffeeInCart = coffeeListState.find(
@@ -99,20 +98,18 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       )
 
       if (isCoffeeInCart) {
-        const coffeeListWithNewItem = coffeeListState.map((coffee) => {
+        const updatedCoffeeList = coffeeListState.map((coffee) => {
           if (coffee.id === coffeeId) {
-            const updateCoffeeWithNewQuantity: CoffeeCartData = {
+            const updatedCoffeeWithNewQuantity: CoffeeCartData = {
               ...coffee,
               quantity: coffee.quantity - 1,
             }
-            // console.log('new coffee with quantity ')
-            // console.log(updateCoffeeWithNewQuantity)
-            return updateCoffeeWithNewQuantity
+            return updatedCoffeeWithNewQuantity
           }
 
           return coffee
         })
-        return coffeeListWithNewItem
+        return updatedCoffeeList
       }
       return coffeeListState
     })
@@ -122,8 +119,9 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       value={{
         coffeeList,
         addCoffeeToShopCart,
-        decreaseCoffeeQtyInCart,
         removeCoffeeFromCart,
+        increaseCoffeeQtyInCart,
+        decreaseCoffeeQtyInCart,
       }}
     >
       {children}

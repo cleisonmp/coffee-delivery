@@ -7,8 +7,11 @@ interface CoffeeCardProps {
   coffeeData: CoffeeCartData
 }
 export function CoffeeCardSideways({ coffeeData }: CoffeeCardProps) {
-  const { addCoffeeToShopCart, decreaseCoffeeQtyInCart, removeCoffeeFromCart } =
-    useContext(CartContext)
+  const {
+    increaseCoffeeQtyInCart,
+    decreaseCoffeeQtyInCart,
+    removeCoffeeFromCart,
+  } = useContext(CartContext)
 
   const { id, name, type, inventoryAmount, quantity } = coffeeData
   const price = new Intl.NumberFormat('pt-BR', {
@@ -19,10 +22,7 @@ export function CoffeeCardSideways({ coffeeData }: CoffeeCardProps) {
 
   const handleAddQuantity = () => {
     if (quantity < inventoryAmount) {
-      addCoffeeToShopCart(id)
-      /* setQuantity((state) => {
-        return state + 1
-      }) */
+      increaseCoffeeQtyInCart(id)
     }
   }
   const handleRemoveQuantity = () => {

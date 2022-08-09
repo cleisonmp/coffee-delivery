@@ -1,5 +1,6 @@
 import { ShoppingCart, Plus, Minus } from 'phosphor-react'
 import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CoffeeCartData } from '../../../@types/models'
 import { CartContext } from '../../../contexts/CartContext'
 
@@ -7,19 +8,42 @@ interface CoffeeCardProps {
   coffeeData: CoffeeCartData
 }
 export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
-  const { addCoffeeToShopCart } = useContext(CartContext)
+  const {
+    coffeeList,
+    addCoffeeToShopCart,
+    removeCoffeeFromCart,
+    increaseCoffeeQtyInCart,
+    decreaseCoffeeQtyInCart,
+  } = useContext(CartContext)
+  const navigateTo = useNavigate()
+
   const { id, name, categories, description, type, inventoryAmount } =
     coffeeData
+  const isCoffeeInCart = coffeeList.find((coffee) => coffee.id === id)
   const price = new Intl.NumberFormat('pt-BR', {
     style: 'decimal',
     minimumFractionDigits: 2,
   }).format(coffeeData.price)
 
-  const [quantity, setQuantity] = useState(0)
+  const quantityInitialValue = isCoffeeInCart ? isCoffeeInCart.quantity : 0
+  const [quantity, setQuantity] = useState(quantityInitialValue)
 
+  const handleAddNewCoffeeToCart = () => {
+    if (quantity < inventoryAmount) {
+      if (isCoffeeInCart) {
+        navigateTo('/checkout')
+        return
+      }
+      addCoffeeToShopCart(id, quantity)
+      navigateTo('/checkout')
+    }
+  }
   const handleAddQuantity = () => {
     if (quantity < inventoryAmount) {
-      addCoffeeToShopCart(id)
+      if (isCoffeeInCart) {
+        increaseCoffeeQtyInCart(id)
+      }
+
       setQuantity((state) => {
         return state + 1
       })
@@ -27,6 +51,13 @@ export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
   }
   const handleRemoveQuantity = () => {
     if (quantity > 0) {
+      if (isCoffeeInCart) {
+        if (quantity <= 1) {
+          removeCoffeeFromCart(id)
+        } else {
+          decreaseCoffeeQtyInCart(id)
+        }
+      }
       setQuantity((state) => {
         return state - 1
       })
@@ -63,6 +94,7 @@ export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
           <div className="flex px-2 gap-2 bg-base-button rounded items-center">
             <button
               onClick={handleRemoveQuantity}
+              disabled={quantity <= 0}
               className="text-xl text-purple-500 hover:text-purple-900 transition-colors"
             >
               <Minus size={14} weight="bold" />
@@ -75,7 +107,11 @@ export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
               <Plus size={14} weight="bold" />
             </button>
           </div>
-          <button className="bg-purple-900 text-white rounded w-[2.375rem] h-[2.375rem] flex items-center justify-center px-2 hover:bg-purple-500 transition-colors">
+          <button
+            onClick={handleAddNewCoffeeToCart}
+            disabled={quantity <= 0}
+            className="bg-purple-900 text-white rounded w-[2.375rem] h-[2.375rem] flex items-center justify-center px-2 hover:bg-purple-500 transition-colors disabled:opacity-50"
+          >
             <ShoppingCart size={22} weight="fill" />
           </button>
         </div>
