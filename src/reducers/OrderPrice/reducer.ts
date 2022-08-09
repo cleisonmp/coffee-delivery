@@ -1,19 +1,22 @@
 import { CoffeeCartData } from '../../@types/models'
 import { ActionTypes } from './actions'
 
-interface CartState {
+interface orderPriceState {
   itemsPriceSum: number
   deliveryPrice: number
   totalOrderPrice: number
 }
-interface CartReducerActionProps {
+interface orderPriceReducerActionProps {
   type: ActionTypes
   payload: {
     coffeeList: CoffeeCartData[]
   }
 }
 
-export function cartReducer(state: CartState, action: CartReducerActionProps) {
+export function orderPriceReducer(
+  state: orderPriceState,
+  action: orderPriceReducerActionProps,
+) {
   switch (action.type) {
     case ActionTypes.UPDATE_CART_SUM: {
       const newItemsPriceSum = action.payload.coffeeList.reduce(
@@ -22,7 +25,7 @@ export function cartReducer(state: CartState, action: CartReducerActionProps) {
       )
       const newDeliveryPrice = 5 + newItemsPriceSum * 0.1
       const newTotalOrderPrice = newItemsPriceSum + newDeliveryPrice
-      const updatedCartState: CartState = {
+      const updatedCartState: orderPriceState = {
         itemsPriceSum: newItemsPriceSum,
         deliveryPrice: newDeliveryPrice,
         totalOrderPrice: newTotalOrderPrice,

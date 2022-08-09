@@ -1,18 +1,18 @@
 import { useContext, useEffect, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CartContext } from '../../../contexts/CartContext'
-import { updateCartSumAction } from '../../../reducers/Cart/actions'
-import { cartReducer } from '../../../reducers/Cart/reducer'
+import { updateCartSumAction } from '../../../reducers/OrderPrice/actions'
+import { orderPriceReducer } from '../../../reducers/OrderPrice/reducer'
 import { CoffeeCardSideways } from './CoffeeCardSideways'
 
 export function Cart() {
   const { coffeeList, clearCart } = useContext(CartContext)
-  const [cartState, dispatch] = useReducer(cartReducer, {
+  const [orderPriceState, dispatch] = useReducer(orderPriceReducer, {
     itemsPriceSum: 0,
     deliveryPrice: 0,
     totalOrderPrice: 0,
   })
-  const { itemsPriceSum, deliveryPrice, totalOrderPrice } = cartState
+  const { itemsPriceSum, deliveryPrice, totalOrderPrice } = orderPriceState
 
   const navigateTo = useNavigate()
 

@@ -1,6 +1,14 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
+import { createContext, ReactNode, useEffect, useReducer } from 'react'
 import { CoffeeCartData } from '../@types/models'
-import { storeCoffeeList } from '../@types/storeCoffeeList'
+
+import {
+  addNewCoffeeToShopCartAction,
+  decreaseCoffeeQtyInCartAction,
+  increaseCoffeeQtyInCartAction,
+  removeAllItemsFromCartAction,
+  removeCoffeeFromCartAction,
+} from '../reducers/CoffeeList/actions'
+import { coffeeListReducer } from '../reducers/CoffeeList/reducer'
 
 interface CartContextInfo {
   coffeeList: CoffeeCartData[]
@@ -27,13 +35,11 @@ const loadCartFromStorage = () => {
   return []
 }
 export function CartContextProvider({ children }: CartContextProviderProps) {
-  const [coffeeList, setCoffeeList] = useState<CoffeeCartData[]>(
-    loadCartFromStorage(),
-  )
+  const [coffeeList, dispatch] = useReducer(coffeeListReducer, [], () => {
+    return loadCartFromStorage()
+  })
 
   useEffect(() => {
-    // const stateJSON =
-
     localStorage.setItem(
       '@cmp-coffeeshop:cart-state-1.0.0',
       JSON.stringify(coffeeList),
@@ -41,83 +47,20 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   }, [coffeeList])
 
   const clearCart = () => {
-    setCoffeeList([])
+    dispatch(removeAllItemsFromCartAction())
   }
 
   const addCoffeeToShopCart = (coffeeId: number, quantityToInsert: number) => {
-    setCoffeeList((coffeeListState) => {
-      const newItemIndex = storeCoffeeList.findIndex(
-        (coffee) => coffee.id === coffeeId,
-      )
-      const newCoffeeToInsert: CoffeeCartData = {
-        ...storeCoffeeList[newItemIndex],
-        quantity: quantityToInsert,
-      }
-
-      if (newCoffeeToInsert) {
-        const updatedCoffeeListWithNewItem: CoffeeCartData[] = [
-          ...coffeeListState,
-          newCoffeeToInsert,
-        ]
-        return updatedCoffeeListWithNewItem
-      }
-      return coffeeListState
-    })
+    dispatch(addNewCoffeeToShopCartAction(coffeeId, quantityToInsert))
   }
   const removeCoffeeFromCart = (coffeeId: number) => {
-    setCoffeeList((coffeeListState) => {
-      const coffeeListWithoutRemovedItem = coffeeListState.filter(
-        (coffee) => coffee.id !== coffeeId,
-      )
-      return coffeeListWithoutRemovedItem
-    })
+    dispatch(removeCoffeeFromCartAction(coffeeId))
   }
   const increaseCoffeeQtyInCart = (coffeeId: number) => {
-    setCoffeeList((coffeeListState) => {
-      const isCoffeeInCart = coffeeListState.find(
-        (coffee) => coffee.id === coffeeId,
-      )
-
-      if (isCoffeeInCart) {
-        const updatedCoffeeList = coffeeListState.map((coffee) => {
-          if (coffee.id === coffeeId) {
-            const updatedCoffeeWithNewQuantity: CoffeeCartData = {
-              ...coffee,
-              quantity: coffee.quantity + 1,
-            }
-            return updatedCoffeeWithNewQuantity
-          }
-
-          return coffee
-        })
-        return updatedCoffeeList
-      }
-
-      return coffeeListState
-    })
+    dispatch(increaseCoffeeQtyInCartAction(coffeeId))
   }
   const decreaseCoffeeQtyInCart = (coffeeId: number) => {
-    setCoffeeList((coffeeListState) => {
-      const isCoffeeInCart = coffeeListState.find(
-        (coffee) => coffee.id === coffeeId,
-      )
-
-      if (isCoffeeInCart) {
-        const updatedCoffeeList = coffeeListState.map((coffee) => {
-          if (coffee.id === coffeeId) {
-            const updatedCoffeeWithNewQuantity: CoffeeCartData = {
-              ...coffee,
-              quantity: coffee.quantity - 1,
-            }
-            return updatedCoffeeWithNewQuantity
-          }
-
-          return coffee
-        })
-        return updatedCoffeeList
-      }
-      return coffeeListState
-    })
+    dispatch(decreaseCoffeeQtyInCartAction(coffeeId))
   }
   return (
     <CartContext.Provider
