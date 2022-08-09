@@ -1,11 +1,11 @@
 import { ShoppingCart, Plus, Minus } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CoffeeCartData } from '../../../@types/models'
+import { Coffee } from '../../../@types/models'
 import { CartContext } from '../../../contexts/CartContext'
 
 interface CoffeeCardProps {
-  coffeeData: CoffeeCartData
+  coffeeData: Coffee
 }
 export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
   const {
