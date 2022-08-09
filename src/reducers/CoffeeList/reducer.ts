@@ -21,9 +21,7 @@ export function coffeeListReducer(
       )
       const newCoffeeToInsert: CoffeeCartData = {
         ...storeCoffeeList[newItemIndex],
-        quantity: action.payload.quantityToInsert
-          ? action.payload.quantityToInsert
-          : 0,
+        quantity: action.payload.quantityToInsert!,
       }
 
       if (newCoffeeToInsert) {
