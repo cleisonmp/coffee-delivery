@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useEffect, useReducer } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useReducer,
+} from 'react'
 import { CoffeeCartData } from '../@types/models'
 
 import {
@@ -46,22 +52,25 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     )
   }, [coffeeList])
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     dispatch(removeAllItemsFromCartAction())
-  }
+  }, [])
 
-  const addCoffeeToShopCart = (coffeeId: number, quantityToInsert: number) => {
-    dispatch(addNewCoffeeToShopCartAction(coffeeId, quantityToInsert))
-  }
-  const removeCoffeeFromCart = (coffeeId: number) => {
+  const addCoffeeToShopCart = useCallback(
+    (coffeeId: number, quantityToInsert: number) => {
+      dispatch(addNewCoffeeToShopCartAction(coffeeId, quantityToInsert))
+    },
+    [],
+  )
+  const removeCoffeeFromCart = useCallback((coffeeId: number) => {
     dispatch(removeCoffeeFromCartAction(coffeeId))
-  }
-  const increaseCoffeeQtyInCart = (coffeeId: number) => {
+  }, [])
+  const increaseCoffeeQtyInCart = useCallback((coffeeId: number) => {
     dispatch(increaseCoffeeQtyInCartAction(coffeeId))
-  }
-  const decreaseCoffeeQtyInCart = (coffeeId: number) => {
+  }, [])
+  const decreaseCoffeeQtyInCart = useCallback((coffeeId: number) => {
     dispatch(decreaseCoffeeQtyInCartAction(coffeeId))
-  }
+  }, [])
   return (
     <CartContext.Provider
       value={{
@@ -77,3 +86,35 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     </CartContext.Provider>
   )
 }
+/*
+value={{
+        coffeeList,
+        addCoffeeToShopCart,
+        removeCoffeeFromCart,
+        increaseCoffeeQtyInCart,
+        decreaseCoffeeQtyInCart,
+        clearCart,
+      }}
+*/
+/*
+<CartContext.Provider
+      value={useMemo(
+        () => ({
+          coffeeList,
+          addCoffeeToShopCart,
+          removeCoffeeFromCart,
+          increaseCoffeeQtyInCart,
+          decreaseCoffeeQtyInCart,
+          clearCart,
+        }),
+        [
+          coffeeList,
+          addCoffeeToShopCart,
+          removeCoffeeFromCart,
+          increaseCoffeeQtyInCart,
+          decreaseCoffeeQtyInCart,
+          clearCart,
+        ],
+      )}
+    >
+    */

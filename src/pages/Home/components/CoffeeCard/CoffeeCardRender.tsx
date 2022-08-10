@@ -1,69 +1,28 @@
 import { ShoppingCart, Plus, Minus } from 'phosphor-react'
-import { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Coffee } from '../../../@types/models'
-import { CartContext } from '../../../contexts/CartContext'
+import { memo } from 'react'
 
-interface CoffeeCardProps {
-  coffeeData: Coffee
+export interface CoffeeInfoPoops {
+  name: string
+  categories: string[]
+  type: string
+  description: string
+  priceFormatted: string
+  quantity: number
+  handleAddQuantity: () => void
+  handleRemoveQuantity: () => void
+  handleAddNewCoffeeToCart: () => void
 }
-export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
-  const {
-    coffeeList,
-    addCoffeeToShopCart,
-    removeCoffeeFromCart,
-    increaseCoffeeQtyInCart,
-    decreaseCoffeeQtyInCart,
-  } = useContext(CartContext)
-  const navigateTo = useNavigate()
-
-  const { id, name, categories, description, type, inventoryAmount } =
-    coffeeData
-  const isCoffeeInCart = coffeeList.find((coffee) => coffee.id === id)
-  const price = new Intl.NumberFormat('pt-BR', {
-    style: 'decimal',
-    minimumFractionDigits: 2,
-  }).format(coffeeData.price)
-
-  const quantityInitialValue = isCoffeeInCart ? isCoffeeInCart.quantity : 0
-  const [quantity, setQuantity] = useState(quantityInitialValue)
-
-  const handleAddNewCoffeeToCart = () => {
-    if (quantity < inventoryAmount) {
-      if (isCoffeeInCart) {
-        navigateTo('/checkout')
-        return
-      }
-      addCoffeeToShopCart(id, quantity)
-      navigateTo('/checkout')
-    }
-  }
-  const handleAddQuantity = () => {
-    if (quantity < inventoryAmount) {
-      if (isCoffeeInCart) {
-        increaseCoffeeQtyInCart(id)
-      }
-
-      setQuantity((state) => {
-        return state + 1
-      })
-    }
-  }
-  const handleRemoveQuantity = () => {
-    if (quantity > 0) {
-      if (isCoffeeInCart) {
-        if (quantity <= 1) {
-          removeCoffeeFromCart(id)
-        } else {
-          decreaseCoffeeQtyInCart(id)
-        }
-      }
-      setQuantity((state) => {
-        return state - 1
-      })
-    }
-  }
-
+const CoffeeInfo = memo(function CoffeeInfo({
+  name,
+  type,
+  categories,
+  description,
+  priceFormatted,
+  quantity,
+  handleAddQuantity,
+  handleRemoveQuantity,
+  handleAddNewCoffeeToCart,
+}: CoffeeInfoPoops) {
   return (
     <div className="bg-base-card rounded-tr-[2.25rem] rounded-bl-[2.25rem] flex flex-col items-center px-5">
       <img src={'./images/' + type + '.png'} alt="" className="-mt-5" />
@@ -87,7 +46,7 @@ export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
         <div>
           <span className="text-sm leading-tight ">R$ </span>
           <span className="mt-4 font-['Baloo_2'] font-bold text-2xl leading-tight">
-            {price}
+            {priceFormatted}
           </span>
         </div>
         <div className="flex gap-2 mt-2 md:mt-0">
@@ -118,4 +77,5 @@ export function CoffeeCard({ coffeeData }: CoffeeCardProps) {
       </div>
     </div>
   )
-}
+})
+export { CoffeeInfo }
