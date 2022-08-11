@@ -18,7 +18,10 @@ export function Header() {
           <Logo />
         </NavLink>
         <div className="flex items-center justify-center gap-3">
-          <button className="flex items-center justify-center bg-purple-100 text-purple-900 rounded p-2 text-sm gap-1 hover:bg-base-hover transition-colors">
+          <button
+            type="button"
+            className="flex items-center justify-center bg-purple-100 text-purple-900 rounded p-2 text-sm gap-1 hover:bg-base-hover transition-colors"
+          >
             <MapPin size={22} weight="fill" />
             São Paulo, SP
           </button>

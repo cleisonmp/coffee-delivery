@@ -42,11 +42,12 @@ export function CoffeeCardSideways({ coffeeData }: CoffeeCardProps) {
       <div className="flex gap-5">
         <img src={'./images/' + type + '.png'} alt="" className="h-16" />
         <div>
-          <h1 className="font-bold text-base-subtitle">{name}</h1>
+          <h3 className="font-bold text-base-subtitle">{name}</h3>
 
           <div className="flex gap-2 mt-2">
             <div className="flex px-2 gap-2 bg-base-button rounded items-center">
               <button
+                type="button"
                 onClick={handleRemoveQuantity}
                 className="text-xl text-purple-500 hover:text-purple-900 transition-colors"
               >
@@ -54,6 +55,7 @@ export function CoffeeCardSideways({ coffeeData }: CoffeeCardProps) {
               </button>
               <span className="text-base-title">{quantity}</span>
               <button
+                type="button"
                 onClick={handleAddQuantity}
                 className="text-xl text-purple-500 hover:text-purple-900 transition-colors"
               >
@@ -61,6 +63,7 @@ export function CoffeeCardSideways({ coffeeData }: CoffeeCardProps) {
               </button>
             </div>
             <button
+              type="button"
               onClick={handleRemoveFromCart}
               className="bg-base-button rounded h-8 flex gap-1 items-center justify-center px-2 hover:bg-base-hover transition-colors leading-relaxed text-xs"
             >

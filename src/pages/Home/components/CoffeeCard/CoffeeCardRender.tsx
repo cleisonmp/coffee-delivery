@@ -1,7 +1,7 @@
 import { ShoppingCart, Plus, Minus } from 'phosphor-react'
 import { memo } from 'react'
 
-export interface CoffeeInfoPoops {
+export interface CoffeeInfoProps {
   name: string
   categories: string[]
   type: string
@@ -22,7 +22,7 @@ const CoffeeInfo = memo(function CoffeeInfo({
   handleAddQuantity,
   handleRemoveQuantity,
   handleAddNewCoffeeToCart,
-}: CoffeeInfoPoops) {
+}: CoffeeInfoProps) {
   return (
     <div className="bg-base-card rounded-tr-[2.25rem] rounded-bl-[2.25rem] flex flex-col items-center px-5">
       <img src={'./images/' + type + '.png'} alt="" className="-mt-5" />
@@ -38,9 +38,9 @@ const CoffeeInfo = memo(function CoffeeInfo({
           )
         })}
       </div>
-      <h1 className="mt-4 font-['Baloo_2'] font-bold text-xl text-base-subtitle">
+      <h3 className="mt-4 font-['Baloo_2'] font-bold text-xl text-base-subtitle">
         {name}
-      </h1>
+      </h3>
       <span className="mt-2 text-sm text-base-label">{description}</span>
       <div className="flex flex-col md:flex-row mt-8 mb-5 w-full items-center justify-between">
         <div>
@@ -52,6 +52,7 @@ const CoffeeInfo = memo(function CoffeeInfo({
         <div className="flex gap-2 mt-2 md:mt-0">
           <div className="flex px-2 gap-2 bg-base-button rounded items-center">
             <button
+              type="button"
               onClick={handleRemoveQuantity}
               disabled={quantity <= 0}
               className="text-xl text-purple-500 hover:text-purple-900 transition-colors"
@@ -60,6 +61,7 @@ const CoffeeInfo = memo(function CoffeeInfo({
             </button>
             <span className="text-base-title">{quantity}</span>
             <button
+              type="button"
               onClick={handleAddQuantity}
               className="text-xl text-purple-500 hover:text-purple-900 transition-colors"
             >
@@ -67,6 +69,7 @@ const CoffeeInfo = memo(function CoffeeInfo({
             </button>
           </div>
           <button
+            type="button"
             onClick={handleAddNewCoffeeToCart}
             disabled={quantity <= 0}
             className="bg-purple-900 text-white rounded w-[2.375rem] h-[2.375rem] flex items-center justify-center px-2 hover:bg-purple-500 transition-colors disabled:opacity-50"
