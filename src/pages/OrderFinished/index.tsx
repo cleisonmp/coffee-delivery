@@ -1,7 +1,43 @@
 import { CurrencyDollar, MapPin, Timer } from 'phosphor-react'
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import OrderFinishedIllustration from './assets/orderFinishedIllustration.png'
 
+interface LocationProps {
+  street: string
+  number: number
+  addressContinued: string
+  neighborhood: string
+  city: string
+  state: string
+  paymentType: string
+  deliveryTime: string
+}
 export function OrderFinished() {
+  const navigateTo = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (!location.state) {
+      navigateTo('/')
+    }
+  }, [location.state, navigateTo])
+
+  if (!location.state) {
+    return <></>
+  }
+
+  const {
+    street,
+    number,
+    addressContinued,
+    neighborhood,
+    city,
+    state,
+    paymentType,
+    deliveryTime,
+  } = location.state as LocationProps
+
   return (
     <div className="flex flex-col mt-20 gap-10">
       <div className="flex flex-col gap-1">
@@ -23,10 +59,10 @@ export function OrderFinished() {
                 <span className="">
                   Entrega em{' '}
                   <span className="font-bold">
-                    Rua João Daniel Martinelli, 102
+                    {street + ', ' + number + ' ' + addressContinued}
                   </span>
                 </span>
-                <span>Farrapos - Porto Alegre, RS</span>
+                <span>{neighborhood + ' - ' + city + ', ' + state}</span>
               </div>
             </div>
             <div className="flex items-center gap-3 w-full">
@@ -35,7 +71,7 @@ export function OrderFinished() {
               </div>
               <div className="flex flex-col text-sm">
                 <span className="">Previsão de entrega</span>
-                <span className="font-bold">20 min - 30 min</span>
+                <span className="font-bold">{deliveryTime}</span>
               </div>
             </div>
             <div className="flex items-center gap-3 w-full">
@@ -44,7 +80,7 @@ export function OrderFinished() {
               </div>
               <div className="flex flex-col text-sm">
                 <span className="">Pagamento na entrega</span>
-                <span className="font-bold">Cartão de Crédito</span>
+                <span className="font-bold">{paymentType}</span>
               </div>
             </div>
           </div>

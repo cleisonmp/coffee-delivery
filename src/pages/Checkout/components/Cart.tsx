@@ -1,12 +1,22 @@
 import { useContext, useEffect, useReducer } from 'react'
+import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { NewOrderFormProps } from '..'
 import { CartContext } from '../../../contexts/CartContext'
 import { updateCartSumAction } from '../../../reducers/OrderPrice/actions'
 import { orderPriceReducer } from '../../../reducers/OrderPrice/reducer'
 import { CoffeeCardSideways } from './CoffeeCardSideways'
 
-export function Cart() {
-  const { coffeeList, clearCart } = useContext(CartContext)
+interface CartProps {
+  createNewOrderHandler: (data: NewOrderFormProps) => void
+  formWithErrorHandler: (data: Object) => void
+}
+export function Cart({
+  createNewOrderHandler,
+  formWithErrorHandler,
+}: CartProps) {
+  const { handleSubmit } = useFormContext<NewOrderFormProps>()
+  const { coffeeList } = useContext(CartContext)
   const [orderPriceState, dispatch] = useReducer(orderPriceReducer, {
     itemsPriceSum: 0,
     deliveryPrice: 0,
@@ -26,10 +36,6 @@ export function Cart() {
     dispatch(updateCartSumAction(coffeeList))
   }, [coffeeList])
 
-  const handleCompleteOrder = () => {
-    clearCart()
-    navigateTo('/orderfinished')
-  }
   const formatPriceValue = (priceToFormat: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -60,7 +66,9 @@ export function Cart() {
         </div>
       </div>
       <button
-        onClick={handleCompleteOrder}
+        type="submit"
+        // onClick={handleCompleteOrder}
+        onClick={handleSubmit(createNewOrderHandler, formWithErrorHandler)}
         className="text-center w-full rounded text-white bg-yellow-500 mt-6 py-3 hover:bg-yellow-900 transition-colors"
       >
         CONFIRMAR PEDIDO
