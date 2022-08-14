@@ -23,23 +23,23 @@ export const applyMask = (value: string, type: MaskType) => {
   switch (type) {
     case 'tel':
       cleared = onlyNumbers(value, 11)
-      formatted = cleared.length <= 10 ? '(_) __-_' : '(_) __-__'
+      formatted = cleared.length <= 10 ? '(__) ____-____' : '(__) _____-____'
       break
     case 'tel-8':
       cleared = onlyNumbers(value, 10)
-      formatted = '(_) __-_'
+      formatted = '(__) ____-____'
       break
     case 'tel-9':
       cleared = onlyNumbers(value, 11)
-      formatted = '(_) __-__'
+      formatted = '(__) _____-____'
       break
     case 'cpf':
       cleared = onlyNumbers(value, 11)
-      formatted = '_._._-__'
+      formatted = '___.___.___-__'
       break
     case 'cnpj':
       cleared = onlyNumbers(value, 14)
-      formatted = '_._._/_-__'
+      formatted = '__.___.___/____-__'
       break
     case 'cep':
       cleared = onlyNumbers(value, 8)
@@ -47,15 +47,15 @@ export const applyMask = (value: string, type: MaskType) => {
       break
     case 'cpf-cnpj':
       cleared = onlyNumbers(value, 14)
-      formatted = cleared.length <= 11 ? '_._._-_' : '._._/_-__'
+      formatted = cleared.length <= 11 ? '___.___.___-__' : '__.___.___/____-__'
       break
     case 'date':
       cleared = onlyNumbers(value, 8)
-      formatted = '_//_'
+      formatted = '__/__/__'
       break
     case 'time':
       cleared = onlyNumbers(value, 4)
-      formatted = '_:_'
+      formatted = '__:__'
       break
     default:
       break

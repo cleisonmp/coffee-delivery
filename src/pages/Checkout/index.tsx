@@ -7,6 +7,8 @@ import { Payment } from './components/Payment'
 import { useNavigate } from 'react-router-dom'
 import { CartContext } from '../../contexts/CartContext'
 import { useContext } from 'react'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const newOrderFormValidationSchema = zod.object({
   cep: zod.string().min(1, 'Cep é um campo obrigatório'),
@@ -41,8 +43,8 @@ export function Checkout() {
   const navigateTo = useNavigate()
 
   const formWithError = (data: Object) => {
-    console.log('form with error')
-    console.log(data)
+    // console.log('form with error')
+    // console.log(data)
   }
   const createNewOrder = (data: NewOrderFormProps) => {
     reset()
@@ -90,6 +92,16 @@ export function Checkout() {
           </div>
         </FormProvider>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={true}
+        toastClassName="bg-base-card"
+      />
     </main>
   )
 }

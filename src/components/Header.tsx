@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Logo } from '../assets/Logo'
 import { CartContext } from '../contexts/CartContext'
+import { toast } from 'react-toastify'
 
 export function Header() {
   const { coffeeList } = useContext(CartContext)
@@ -27,6 +28,14 @@ export function Header() {
           </button>
           <NavLink
             to="/checkout"
+            onClick={(e) => {
+              if (coffeeList.length <= 0) {
+                e.preventDefault()
+                toast.info(
+                  'Seu carrinho está vazio, adicione alguns itens antes',
+                )
+              }
+            }}
             title="Carrinho de Compras"
             className={
               'flex items-center justify-center bg-yellow-100 text-yellow-900 rounded p-2 hover:bg-yellow-500 transition-colors'

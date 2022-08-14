@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Coffee } from '../../../../@types/models'
 import { CartContext } from '../../../../contexts/CartContext'
 import { CoffeeInfo } from './CoffeeCardRender'
+import { toast, ToastContentProps } from 'react-toastify'
+import { Coffee as CoffeeIcon, ShoppingCart } from 'phosphor-react'
 
 export function CoffeeCard({
   id,
@@ -32,6 +34,30 @@ export function CoffeeCard({
 
   const [quantity, setQuantity] = useState(quantityInitialValue)
 
+  const goToCart = useCallback(() => {
+    navigateTo('/checkout')
+  }, [navigateTo])
+
+  const ToastMsgContent = useCallback(
+    ({ closeToast, toastProps }: Partial<ToastContentProps>) => (
+      <div className="flex flex-col gap-3 items-start">
+        <button onClick={goToCart} className="flex items-center gap-1">
+          <div className="bg-yellow-900 text-white rounded-full w-6 h-6 flex items-center justify-center px-1">
+            <ShoppingCart size={22} weight="fill" />
+          </div>
+          Ir para o carrinho
+        </button>
+        <button onClick={closeToast} className="flex items-center gap-1">
+          <div className="bg-purple-900 text-white rounded-full w-6 h-6 flex items-center justify-center px-1">
+            <CoffeeIcon size={22} weight="fill" />
+          </div>
+          Continuar comprando
+        </button>
+      </div>
+    ),
+    [goToCart],
+  )
+
   const handleAddNewCoffeeToCart = useCallback(() => {
     if (quantity < inventoryAmount) {
       if (isCoffeeInCart) {
@@ -39,7 +65,10 @@ export function CoffeeCard({
         return
       }
       addCoffeeToShopCart(id, quantity)
-      navigateTo('/checkout')
+      toast(<ToastMsgContent />, {
+        toastId: id,
+      })
+      //
     }
   }, [
     quantity,
@@ -47,6 +76,7 @@ export function CoffeeCard({
     isCoffeeInCart,
     addCoffeeToShopCart,
     id,
+    ToastMsgContent,
     navigateTo,
   ])
   const handleAddQuantity = useCallback(() => {
@@ -82,16 +112,18 @@ export function CoffeeCard({
   ])
 
   return (
-    <CoffeeInfo
-      name={name}
-      categories={categories}
-      type={type}
-      description={description}
-      priceFormatted={priceFormatted}
-      quantity={quantity}
-      handleAddQuantity={handleAddQuantity}
-      handleRemoveQuantity={handleRemoveQuantity}
-      handleAddNewCoffeeToCart={handleAddNewCoffeeToCart}
-    />
+    <div>
+      <CoffeeInfo
+        name={name}
+        categories={categories}
+        type={type}
+        description={description}
+        priceFormatted={priceFormatted}
+        quantity={quantity}
+        handleAddQuantity={handleAddQuantity}
+        handleRemoveQuantity={handleRemoveQuantity}
+        handleAddNewCoffeeToCart={handleAddNewCoffeeToCart}
+      />
+    </div>
   )
 }

@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form'
 import { NewOrderFormProps } from '../'
 import { stateList } from '../../../@types/models'
 import { applyMask, onlyNumbers } from '../../../@utils/masks'
+import { toast } from 'react-toastify'
 
 export function AddressForm() {
   const {
@@ -40,12 +41,18 @@ export function AddressForm() {
           setValue('neighborhood', response.data.neighborhood)
           setValue('state', response.data.state)
         })
-        .catch(function (error) {
-          console.error(error.response.status)
+        .catch(function () {
+          // console.error(error.response.status)
+          toast.warning('Cep não encontrado', {
+            toastId: 'cep-war',
+          })
         })
         .then(function () {})
     } else {
-      console.error('Cep inválido')
+      // console.error('Cep inválido')
+      toast.error('Cep inválido', {
+        toastId: 'cep-inv',
+      })
     }
   }
   const baseInputStyle =
