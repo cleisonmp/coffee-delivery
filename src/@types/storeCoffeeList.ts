@@ -107,7 +107,7 @@ export const storeCoffeeList: Coffee[] = [
   {
     id: 12,
     name: 'Havaiano',
-    type: 'Havaiano',
+    type: 'havaiano',
     categories: ['Especial'],
     description: 'Bebida adocicada preparada com café e leite de coco',
     price: 14.9,
